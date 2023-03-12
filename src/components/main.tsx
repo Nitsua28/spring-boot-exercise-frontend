@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer } from "react";
+import { hover } from "@testing-library/user-event/dist/hover";
+import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { EmployeeFormReducer, EmployeeFormState } from "../reducers/employee-form-reducer";
 import { EmployeeActions, EmployeeState } from "../reducers/employee-reducer";
@@ -6,6 +7,7 @@ import { EmployeeActions, EmployeeState } from "../reducers/employee-reducer";
 export function Main(){
 
     const initialState: EmployeeFormState = {
+        id: "",
         name: "",
         location: "",
         email: "",
@@ -25,6 +27,7 @@ export function Main(){
         })();
         
       },[]);
+    const [isHover, setHover] = useState(false);
     return (<>
         {/* Create / edit*/}
         <div style={{display:"flex", width:"100%", height:"500vh", backgroundColor:"lightblue", justifyContent:"center", alignItems:"baseline"}}>
@@ -54,8 +57,18 @@ export function Main(){
                 <h1>EMPLOYEES</h1>
                 <ul>
                     {selector.list.map(
-                        (item)=> <li key = {item.name}>{item.name}{item.location}{item.phonenumber}
-                            <button onClick={()=> sendDispatch({type: "REQUEST_DELETE", payload:item.name})}>delete</button></li>
+                        (item)=> <li key = {item.name}>
+
+                            <ul onMouseEnter= {()=> setHover(true)}
+                            onMouseLeave= {()=> setHover(false)}
+                            style={{backgroundColor: isHover ? "red": ""}}>
+                                <li>{item.name}</li>
+                                <li>{item.location}</li>
+                                <li>{item.email}</li>
+                                <li>{item.phonenumber}</li>
+                            </ul>
+                            
+                            <button onClick={()=> sendDispatch({type: "REQUEST_DELETE_EMPLOYEE", payload:item.id})}>delete</button></li>
                     )}
                 </ul>
             </div>
